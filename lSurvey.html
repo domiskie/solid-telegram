@@ -1,0 +1,244 @@
+survey
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Survey Response</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      padding: 40px;
+      background-color: #fdf6f0;
+      color: #333;
+      margin: 0;
+    }
+
+    h1 {
+      color: #d75b5b;
+      font-size: 30px;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin: 10px 0 5px;
+    }
+
+    input[type="text"], select {
+      width: 98%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .question-box {
+      margin-bottom: 30px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      background-color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease;
+    }
+
+    .question-box:hover {
+      transform: translateY(-5px);
+    }
+
+    input[type="radio"] {
+      margin-right: 8px;
+    }
+
+    button {
+      background-color: #d75b5b;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      margin-top: 10px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #b44b4b;
+    }
+
+    .submit-btn {
+      margin-top: 20px;
+      background-color: #45a049;
+    }
+
+    .submit-btn:hover {
+      background-color: #368738;
+    }
+
+    #surveyLink {
+      word-break: break-all;
+      color: #2c3e50;
+      font-weight: 600;
+    }
+
+    #copyPopup {
+      font-size: 14px;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Google Sign-In -->
+  <div id="loginContainer" style="text-align:center; margin-top:100px;">
+    <div id="g_id_onload"
+         data-client_id="67797903274-2hocgdtequhqundb41ufpci7072h5s9t.apps.googleusercontent.com"
+         data-callback="onLogin"
+         data-auto_prompt="false">
+    </div>
+    <div class="g_id_signin"
+         data-type="standard"
+         data-size="large"
+         data-theme="outline"
+         data-text="sign_in_with"
+         data-shape="pill"
+         data-logo_alignment="left">
+    </div>
+  </div>
+
+  <h1 id="surveyTitle"></h1>
+
+  <form id="surveyResponseForm" style="display:none;">
+    <div id="surveyQuestions"></div>
+    <button type="submit" class="submit-btn">✅ Submit Answers</button>
+  </form>
+
+  <div id="shareModal" style="display:none;">
+    <h3>🎉 Survey Link Created!</h3>
+    <p><a id="surveyLink" href="#" target="_blank"></a></p>
+    <button onclick="sendLink()">📋 Copy Link</button>
+    <button onclick="sendGmail()">✉️ Send via Gmail</button>
+    <p id="copyPopup" style="color: green; display:none;">Copied to clipboard!</p>
+  </div>
+
+  <script>
+    let loggedInUser = null;
+
+    function onLogin(response) {
+      const credential = response.credential;
+      const decoded = parseJwt(credential);
+      loggedInUser = decoded;
+      localStorage.setItem("loggedInUser", JSON.stringify(decoded));
+      document.getElementById("loginContainer").style.display = "none";
+      document.getElementById("surveyResponseForm").style.display = "block";
+      loadSurvey();
+    }
+
+    function parseJwt(token) {
+      const base64Url = token.split('.')[1];
+      const base64 = decodeURIComponent(atob(base64Url).split('').map(c =>
+        '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+      ).join(''));
+      return JSON.parse(base64);
+    }
+
+    function loadSurvey() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const surveyId = urlParams.get('id');
+      const surveyData = JSON.parse(localStorage.getItem(`surveyData_${surveyId}`));
+      const surveyTitle = document.getElementById('surveyTitle');
+      const surveyQuestionsDiv = document.getElementById('surveyQuestions');
+
+      if (!surveyData) {
+        surveyTitle.innerText = "Survey not found.";
+        surveyQuestionsDiv.innerHTML = "<p>Sorry, we couldn't load this survey. Please check the link or try again later.</p>";
+        return;
+      }
+
+      if (surveyData.backgroundColor) {
+        document.body.style.backgroundColor = surveyData.backgroundColor;
+      }
+
+      surveyTitle.innerText = surveyData.title;
+
+      surveyData.questions.forEach((question, index) => {
+        const questionBox = document.createElement('div');
+        questionBox.classList.add('question-box');
+
+        let questionHTML = `<label>${question.question}</label><br>`;
+
+        if (question.type === 'short') {
+          questionHTML += `<input type="text" name="question${index}" placeholder="Your answer...">`;
+        } else if (question.type === 'multiple') {
+          question.options.forEach(option => {
+            questionHTML += `<input type="radio" name="question${index}" value="${option}"> ${option}<br>`;
+          });
+        }
+
+        questionBox.innerHTML = questionHTML;
+        surveyQuestionsDiv.appendChild(questionBox);
+      });
+
+      document.getElementById('surveyResponseForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const responses = {};
+        surveyData.questions.forEach((question, index) => {
+          if (question.type === 'short') {
+            const input = document.querySelector(`[name="question${index}"]`);
+            responses[question.question] = input.value;
+          } else if (question.type === 'multiple') {
+            const selected = document.querySelector(`[name="question${index}"]:checked`);
+            responses[question.question] = selected ? selected.value : '';
+          }
+        });
+
+        responses["Responder Email"] = loggedInUser.email;
+
+        let allResponses = JSON.parse(localStorage.getItem(`responses_${surveyId}`)) || [];
+        allResponses.push(responses);
+        localStorage.setItem(`responses_${surveyId}`, JSON.stringify(allResponses));
+
+        window.location.replace("thankyou.html");
+      });
+    }
+
+    function sendLink() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const surveyId = urlParams.get('id');
+      const surveyURL = `${window.location.origin}/survey.html?id=${surveyId}`;
+      navigator.clipboard.writeText(surveyURL).then(() => {
+        const popup = document.getElementById('copyPopup');
+        popup.style.display = 'block';
+        setTimeout(() => popup.style.display = 'none', 2000);
+      });
+    }
+
+    function sendGmail() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const surveyId = urlParams.get('id');
+      const surveyData = JSON.parse(localStorage.getItem(`surveyData_${surveyId}`));
+      const title = surveyData.title || 'Survey';
+      const body = encodeURIComponent(`Please take the survey "${title}": ${window.location.origin}/survey.html?id=${surveyId}`);
+      const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&su=${encodeURIComponent('New Survey')}&body=${body}`;
+      window.open(gmailLink, '_blank');
+    }
+
+    window.onload = () => {
+      const storedUser = localStorage.getItem("loggedInUser");
+      if (storedUser) {
+        loggedInUser = JSON.parse(storedUser);
+        document.getElementById("loginContainer").style.display = "none";
+        document.getElementById("surveyResponseForm").style.display = "block";
+        loadSurvey();
+      } else {
+        document.getElementById("surveyResponseForm").style.display = "none";
+      }
+    };
+  </script>
+</body>
+</html>

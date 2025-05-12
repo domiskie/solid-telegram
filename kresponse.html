@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Survey Results</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      padding: 40px;
+      background-color: #fdf6f0;
+      color: #333;
+      margin: 0;
+    }
+
+    h1 {
+      color: #d75b5b;
+      font-size: 30px;
+      margin-bottom: 20px;
+    }
+
+    .question-block {
+      margin-bottom: 30px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      background-color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .question-block h3 {
+      margin-top: 0;
+    }
+
+    .response {
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 6px;
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1 id="resultsTitle">Survey Results</h1>
+  <div id="resultsContainer"></div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const surveyId = urlParams.get("id");
+    const surveyData = JSON.parse(localStorage.getItem("surveyData_" + surveyId));
+    const allResponses = JSON.parse(localStorage.getItem("responses_" + surveyId)) || [];
+
+    const resultsTitle = document.getElementById("resultsTitle");
+    const resultsContainer = document.getElementById("resultsContainer");
+
+    if (!surveyData) {
+      resultsTitle.innerText = "Survey not found.";
+      resultsContainer.innerHTML = "<p>Sorry, this survey could not be loaded.</p>";
+    } else {
+      resultsTitle.innerText = `Responses to: ${surveyData.title}`;
+
+      surveyData.questions.forEach((q, index) => {
+        const block = document.createElement("div");
+        block.className = "question-block";
+
+        block.innerHTML = `<h3>${q.question}</h3>`;
+
+        const answers = allResponses.map(r => r[q.question]).filter(Boolean);
+
+        if (answers.length === 0) {
+          block.innerHTML += "<p>No responses yet.</p>";
+        } else {
+          answers.forEach(answer => {
+            const p = document.createElement("div");
+            p.className = "response";
+            p.textContent = answer;
+            block.appendChild(p);
+          });
+        }
+
+        resultsContainer.appendChild(block);
+      });
+    }
+  </script>
+</body>
+</html>

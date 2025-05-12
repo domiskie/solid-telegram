@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Digital Survey Landing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      height: 100vh;
+      background: linear-gradient(135deg, #fff4f4, #f0f9ff);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-bar {
+      background-color: #d75b5b;
+      color: white;
+      padding: 20px;
+      font-size: 24px;
+      font-weight: 600;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .center-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .content-box {
+      background-color: #ffffffcc;
+      padding: 40px 50px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      text-align: left;
+      max-width: 500px;
+    }
+
+    .subtext {
+      font-size: 28px;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .survey-button {
+      padding: 14px 28px;
+      font-size: 18px;
+      background-color: #d75b5b;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 14px rgba(215, 91, 91, 0.3);
+      margin-top: 10px;
+      display: none;
+    }
+
+    .survey-button:hover {
+      background-color: #b44b4b;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(215, 91, 91, 0.4);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    Digital Survey Website
+  </div>
+
+  <div class="center-container">
+    <div class="content-box">
+      <div class="subtext"> Ready to create your own<br>interactive survey?</div>
+
+      <!-- Google Sign-In button with NEW client ID -->
+      <div id="g_id_onload"
+           data-client_id="67797903274-2hocgdtequhqundb41ufpci7072h5s9t.apps.googleusercontent.com"
+           data-callback="handleCredentialResponse"
+           data-auto_prompt="false">
+      </div>
+
+      <div class="g_id_signin"
+           data-type="standard"
+           data-shape="rectangular"
+           data-theme="outline"
+           data-text="sign_in_with"
+           data-size="large"
+           data-logo_alignment="left">
+      </div>
+
+      <button id="surveyButton" class="survey-button" onclick="window.location.href='CreateSurvey.html'">
+        ➕ Make a Survey
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Global function for Google Sign-In callback
+    window.handleCredentialResponse = function(response) {
+      const data = parseJwt(response.credential);
+      console.log("User signed in:", data);
+      sessionStorage.setItem('isLoggedIn', 'true');
+      document.getElementById('surveyButton').style.display = 'inline-block';
+    };
+
+    function parseJwt(token) {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    }
+  </script>
+
+</body>
+</html>
