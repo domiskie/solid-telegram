@@ -6,306 +6,228 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-
     body {
       font-family: 'Poppins', sans-serif;
       background-color: #fdf6f0;
       padding: 40px;
       color: #333;
     }
-
-    h1 {
-      color: #d75b5b;
-      font-size: 32px;
-      margin-bottom: 20px;
-    }
-
-    label {
-      font-weight: 600;
-      display: block;
-      margin: 10px 0 5px;
-    }
-
+    h1 { color: #d75b5b; font-size: 32px; margin-bottom: 20px; }
+    label { font-weight: 600; display: block; margin: 10px 0 5px; }
     input[type="text"], select {
-      width: 98%;
-      padding: 10px 12px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 16px;
+      width: 98%; padding: 10px 12px; border-radius: 8px;
+      border: 1px solid #ccc; font-size: 16px;
     }
-
     button {
-      background-color: #d75b5b;
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      margin-top: 10px;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.3s ease;
+      background-color: #d75b5b; color: white; border: none;
+      padding: 10px 18px; margin-top: 10px; border-radius: 6px;
+      font-size: 16px; cursor: pointer; transition: background 0.3s ease;
     }
-
-    button:hover {
-      background-color: #b44b4b;
-    }
-
-    #questionsContainer {
-      margin-top: 30px;
-    }
-
+    button:hover { background-color: #b44b4b; }
+    #questionsContainer { margin-top: 30px; }
     .question-block {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      margin-bottom: 20px;
-      position: relative;
-      transition: transform 0.2s;
+      background-color: #fff; padding: 20px; border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 20px;
+      position: relative; transition: transform 0.2s;
     }
-
-    .question-block:hover {
-      transform: translateY(-2px);
-    }
-
+    .question-block:hover { transform: translateY(-2px); }
     .delete-question {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: #e74c3c;
-      border: none;
-      color: white;
-      padding: 5px 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 14px;
+      position: absolute; top: 10px; right: 10px; background: #e74c3c;
+      border: none; color: white; padding: 5px 10px;
+      border-radius: 5px; cursor: pointer; font-size: 14px;
     }
-
     .remove-btn {
-      background: transparent;
-      border: none;
-      color: #e74c3c;
-      cursor: pointer;
-      margin-left: 8px;
+      background: transparent; border: none; color: #e74c3c;
+      cursor: pointer; margin-left: 8px;
     }
-
     #shareModal {
-      background-color: #fff9f0;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      margin-top: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      background-color: #fff9f0; padding: 20px;
+      border: 1px solid #ccc; border-radius: 10px;
+      margin-top: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
-
-    #surveyLink {
-      word-break: break-word;
-      color: #2c3e50;
-    }
-
-    #copyPopup {
-      font-size: 14px;
-      margin-top: 8px;
-    }
-
-    #resultsModal {
-      display: none;
-      margin-top: 20px;
-    }
-
-    #resultsModal button {
-      background-color: #5b7bd7;
-    }
-
-    select#bgThemeSelector {
-      max-width: 200px;
-    }
-
+    #surveyLink { word-break: break-word; color: #2c3e50; }
+    #copyPopup { font-size: 14px; margin-top: 8px; }
+    #resultsModal { display: none; margin-top: 20px; }
+    #resultsModal button { background-color: #5b7bd7; }
+    select#bgThemeSelector { max-width: 200px; }
     .logout-container {
-      text-align: right;
-      margin-bottom: 20px;
+      text-align: right; margin-bottom: 20px;
     }
-
     .logout-button {
-      background-color: #888;
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
-      font-size: 14px;
-      cursor: pointer;
+      background-color: #888; color: white; border: none;
+      padding: 8px 14px; border-radius: 6px;
+      font-size: 14px; cursor: pointer;
     }
-
-    .logout-button:hover {
-      background-color: #666;
-    }
+    .logout-button:hover { background-color: #666; }
   </style>
 </head>
 <body>
 
-  <script>
-    if (!sessionStorage.getItem('isLoggedIn')) {
-      alert("You must be logged in to access this page.");
-      window.location.href = "http://127.0.0.1:5501/QuickSurveyBuilder.com.html";
-    }
-  </script>
+<script>
+  const BASE_URL = "const BASE_URL = "https://domiskie.github.io/solid-telegram/";
 
-  <div class="logout-container">
-    <button onclick="logout()" class="logout-button">🔒 Logout</button>
-  </div>
+  if (!sessionStorage.getItem('isLoggedIn')) {
+    alert("You must be logged in to access this page.");
+    window.location.href = BASE_URL + "https://domiskie.github.io/solid-telegram/";
+  }
+</script>
 
-  <h1>Create a Survey</h1>
-  <form id="surveyForm">
-    <label>Survey Title:</label>
-    <input type="text" id="surveyTitleInput" required>
+<div class="logout-container">
+  <button onclick="logout()" class="logout-button">🔒 Logout</button>
+</div>
 
-    <label>Select a Background Theme:</label>
-    <select id="bgThemeSelector">
-      <option value="#ffdddd">Coral Pink</option>
-      <option value="#ddeeff">Sky Blue</option>
-      <option value="#fffacc">Sunshine Yellow</option>
-    </select>
+<h1>Create a Survey</h1>
+<form id="surveyForm">
+  <label>Survey Title:</label>
+  <input type="text" id="surveyTitleInput" required>
 
-    <div id="questionsContainer"></div>
-    <button type="button" onclick="addQuestion()">➕ Add Question</button><br><br>
-    <button type="submit">✅ Create Survey</button>
-  </form>
+  <label>Select a Background Theme:</label>
+  <select id="bgThemeSelector">
+    <option value="#ffdddd">Coral Pink</option>
+    <option value="#ddeeff">Sky Blue</option>
+    <option value="#fffacc">Sunshine Yellow</option>
+  </select>
 
-  <div id="shareModal" style="display:none;">
-    <h3>🎉 Survey Link Created!</h3>
-    <p><a id="surveyLink" href="#" target="_blank"></a></p>
-    <button onclick="sendLink()">📋 Copy Link</button>
-    <button onclick="sendGmail()">✉️ Send with Gmail</button>
-    <p id="copyPopup" style="color: green; display:none;">Copied to clipboard!</p>
-  </div>
+  <div id="questionsContainer"></div>
+  <button type="button" onclick="addQuestion()">➕ Add Question</button><br><br>
+  <button type="submit">✅ Create Survey</button>
+</form>
 
-  <!-- ✅ View Results Button -->
-  <div id="resultsModal">
-    <button onclick="viewResults()">📊 View Survey Answers</button>
-  </div>
+<div id="shareModal" style="display:none;">
+  <h3>🎉 Survey Link Created!</h3>
+  <p><a id="surveyLink" href="#" target="_blank"></a></p>
+  <button onclick="sendLink()">📋 Copy Link</button>
+  <button onclick="sendGmail()">✉️ Send with Gmail</button>
+  <p id="copyPopup" style="color: green; display:none;">Copied to clipboard!</p>
+</div>
 
-  <script>
-    let questionCount = 0;
-    let lastSurveyId = null;
-    let selectedBackgroundColor = "#ffdddd";
+<div id="resultsModal">
+  <button onclick="viewResults()">📊 View Survey Answers</button>
+</div>
 
-    function addQuestion() {
-      const container = document.getElementById('questionsContainer');
-      const div = document.createElement('div');
-      div.className = 'question-block';
-      div.id = `questionBlock${questionCount}`;
-      div.innerHTML = `
-        <button type="button" class="delete-question" onclick="removeQuestion(${questionCount})">Delete</button>
-        <label>Question:</label>
-        <input type="text" name="questionText${questionCount}" required>
-        <label>Type:</label>
-        <select name="questionType${questionCount}" onchange="toggleOptions(${questionCount}, this.value)">
-          <option value="short">Short Answer</option>
-          <option value="multiple">Multiple Choice</option>
-        </select>
-        <div id="options${questionCount}" style="display:none; margin-top:10px;">
-          <label>Options:</label>
-          <div id="optionContainer${questionCount}">
-            <div>
-              <input type="text" name="questionOptions${questionCount}[]" placeholder="Option 1">
-              <button type="button" class="remove-btn" onclick="removeOption(this)">✖</button>
-            </div>
+<script>
+  let questionCount = 0;
+  let lastSurveyId = null;
+  let selectedBackgroundColor = "#ffdddd";
+
+  function addQuestion() {
+    const container = document.getElementById('questionsContainer');
+    const div = document.createElement('div');
+    div.className = 'question-block';
+    div.id = `questionBlock${questionCount}`;
+    div.innerHTML = `
+      <button type="button" class="delete-question" onclick="removeQuestion(${questionCount})">Delete</button>
+      <label>Question:</label>
+      <input type="text" name="questionText${questionCount}" required>
+      <label>Type:</label>
+      <select name="questionType${questionCount}" onchange="toggleOptions(${questionCount}, this.value)">
+        <option value="short">Short Answer</option>
+        <option value="multiple">Multiple Choice</option>
+      </select>
+      <div id="options${questionCount}" style="display:none; margin-top:10px;">
+        <label>Options:</label>
+        <div id="optionContainer${questionCount}">
+          <div>
+            <input type="text" name="questionOptions${questionCount}[]" placeholder="Option 1">
+            <button type="button" class="remove-btn" onclick="removeOption(this)">✖</button>
           </div>
-          <button type="button" onclick="addOption(${questionCount})">➕ Add Option</button>
         </div>
-      `;
-      container.appendChild(div);
-      questionCount++;
-    }
+        <button type="button" onclick="addOption(${questionCount})">➕ Add Option</button>
+      </div>
+    `;
+    container.appendChild(div);
+    questionCount++;
+  }
 
-    function toggleOptions(index, type) {
-      document.getElementById(`options${index}`).style.display = type === 'multiple' ? 'block' : 'none';
-    }
+  function toggleOptions(index, type) {
+    document.getElementById(`options${index}`).style.display = type === 'multiple' ? 'block' : 'none';
+  }
 
-    function addOption(index) {
-      const container = document.getElementById(`optionContainer${index}`);
-      const div = document.createElement('div');
-      div.innerHTML = `
-        <input type="text" name="questionOptions${index}[]" placeholder="Option ${container.children.length + 1}">
-        <button type="button" class="remove-btn" onclick="removeOption(this)">✖</button>
-      `;
-      container.appendChild(div);
-    }
+  function addOption(index) {
+    const container = document.getElementById(`optionContainer${index}`);
+    const div = document.createElement('div');
+    div.innerHTML = `
+      <input type="text" name="questionOptions${index}[]" placeholder="Option ${container.children.length + 1}">
+      <button type="button" class="remove-btn" onclick="removeOption(this)">✖</button>
+    `;
+    container.appendChild(div);
+  }
 
-    function removeOption(button) {
-      button.parentElement.remove();
-    }
+  function removeOption(button) {
+    button.parentElement.remove();
+  }
 
-    function removeQuestion(index) {
-      const block = document.getElementById(`questionBlock${index}`);
-      if (block) block.remove();
-    }
+  function removeQuestion(index) {
+    const block = document.getElementById(`questionBlock${index}`);
+    if (block) block.remove();
+  }
 
-    document.getElementById('bgThemeSelector').addEventListener('change', function (e) {
-      selectedBackgroundColor = e.target.value;
-      document.body.style.backgroundColor = selectedBackgroundColor;
+  document.getElementById('bgThemeSelector').addEventListener('change', function (e) {
+    selectedBackgroundColor = e.target.value;
+    document.body.style.backgroundColor = selectedBackgroundColor;
+  });
+
+  document.getElementById('surveyForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const title = document.getElementById('surveyTitleInput').value.trim();
+    const questionBlocks = document.querySelectorAll('.question-block');
+    const questions = [];
+
+    questionBlocks.forEach(block => {
+      const qText = block.querySelector('[name^="questionText"]')?.value.trim();
+      const qType = block.querySelector('[name^="questionType"]')?.value;
+      const qOptions = Array.from(block.querySelectorAll('[name^="questionOptions"]'))
+        .map(opt => opt.value.trim()).filter(Boolean);
+
+      if (qText) {
+        questions.push({ question: qText, type: qType, options: qType === 'multiple' ? qOptions : [] });
+      }
     });
 
-    document.getElementById('surveyForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const title = document.getElementById('surveyTitleInput').value.trim();
-      const questionBlocks = document.querySelectorAll('.question-block');
-      const questions = [];
+    const surveyId = crypto.randomUUID();
+    lastSurveyId = surveyId;
+    const surveyData = { title, questions, backgroundColor: selectedBackgroundColor };
+    localStorage.setItem(`surveyData_${surveyId}`, JSON.stringify(surveyData));
 
-      questionBlocks.forEach(block => {
-        const qText = block.querySelector('[name^="questionText"]')?.value.trim();
-        const qType = block.querySelector('[name^="questionType"]')?.value;
-        const qOptions = Array.from(block.querySelectorAll('[name^="questionOptions"]'))
-          .map(opt => opt.value.trim()).filter(Boolean);
+    const link = `${BASE_URL}/survey.html?id=${surveyId}`;
+    document.getElementById('surveyLink').href = link;
+    document.getElementById('surveyLink').textContent = link;
+    document.getElementById('shareModal').style.display = 'block';
+    document.getElementById('resultsModal').style.display = 'block';
+  });
 
-        if (qText) {
-          questions.push({ question: qText, type: qType, options: qType === 'multiple' ? qOptions : [] });
-        }
-      });
-
-      const surveyId = crypto.randomUUID();
-      lastSurveyId = surveyId;
-      const surveyData = { title, questions, backgroundColor: selectedBackgroundColor };
-      localStorage.setItem(`surveyData_${surveyId}`, JSON.stringify(surveyData));
-
-      const link = `${window.location.origin}/survey.html?id=${surveyId}`;
-      document.getElementById('surveyLink').href = link;
-      document.getElementById('surveyLink').textContent = link;
-      document.getElementById('shareModal').style.display = 'block';
-      document.getElementById('resultsModal').style.display = 'block'; // ✅ Show "View Survey Answers"
+  function sendLink() {
+    const surveyURL = `${BASE_URL}/survey.html?id=${lastSurveyId}`;
+    navigator.clipboard.writeText(surveyURL).then(() => {
+      const popup = document.getElementById('copyPopup');
+      popup.style.display = 'block';
+      setTimeout(() => popup.style.display = 'none', 2000);
     });
+  }
 
-    function sendLink() {
-      const surveyURL = `${window.location.origin}/survey.html?id=${lastSurveyId}`;
-      navigator.clipboard.writeText(surveyURL).then(() => {
-        const popup = document.getElementById('copyPopup');
-        popup.style.display = 'block';
-        setTimeout(() => popup.style.display = 'none', 2000);
-      });
-    }
+  function sendGmail() {
+    const title = document.getElementById('surveyTitleInput').value.trim();
+    const body = encodeURIComponent(`Please take the survey "${title}": ${BASE_URL}/survey.html?id=${lastSurveyId}`);
+    const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&su=${encodeURIComponent('New Survey')}&body=${body}`;
+    window.open(gmailLink, '_blank');
+  }
 
-    function sendGmail() {
-      const title = document.getElementById('surveyTitleInput').value.trim();
-      const body = encodeURIComponent(`Please take the survey "${title}": ${window.location.origin}/survey.html?id=${lastSurveyId}`);
-      const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&su=${encodeURIComponent('New Survey')}&body=${body}`;
-      window.open(gmailLink, '_blank');
-    }
+  function viewResults() {
+    const resultURL = `${BASE_URL}/responses.html?id=${lastSurveyId}`;
+    window.open(resultURL, '_blank');
+  }
 
-    function viewResults() {
-      const resultURL = `http://127.0.0.1:5500/responses.html?id=${lastSurveyId}`;
-      window.open(resultURL, '_blank');
-    }
+  function logout() {
+    google.accounts.id.disableAutoSelect();
+    localStorage.removeItem('userData');
+    sessionStorage.clear();
+    alert("You have been logged out.");
+    document.getElementById('surveyForm').reset();
+    document.body.style.backgroundColor = '#fdf6f0';
+    document.getElementById('questionsContainer').innerHTML = '';
+    window.location.href = BASE_URL + "/";
+  }
+</script>
 
-    function logout() {
-      google.accounts.id.disableAutoSelect();
-      localStorage.removeItem('userData');
-      sessionStorage.clear();
-      alert("You have been logged out.");
-      document.getElementById('surveyForm').reset();
-      document.body.style.backgroundColor = '#fdf6f0';
-      document.getElementById('questionsContainer').innerHTML = '';
-      window.location.href = "http://127.0.0.1:5501/QuickSurveyBuilder.com.html";
-    }
-  </script>
 </body>
 </html>
